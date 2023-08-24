@@ -24,32 +24,32 @@ void setup()
   Serial.println();
 
   wifi_config.begin(&HTTP, &FILESYSTEM);
+  // ==== инициализируем файловую систему ============
+  if (FILESYSTEM.begin())
+  {
+    // ==== восстанавливаем настройки ================
+    wifi_config.loadConfig();
+    switch_control.attachWebInterface(&HTTP, &FILESYSTEM);
+  }
+  // ==== подключаем WiFi ============================
+  if (!wifi_config.startWiFi())
+  {
+    ESP.restart();
+  }
+  // ==== запускаем UDP ==============================
   Serial.println(F("Starting UDP"));
   if (udp.begin(local_port))
   {
     switch_control.begin(&udp, local_port, switch_count, relays);
-    if (FILESYSTEM.begin())
-    {
-      // ==== восстанавливаем настройки ================
-      wifi_config.loadConfig();
-      switch_control.attachWebInterface(&HTTP, &FILESYSTEM);
-    }
+    wifi_config.setUseLed(true, LED_BUILTIN);
   }
   else
   {
     Serial.println(F("failed, restart"));
     ESP.restart();
   }
-
-  wifi_config.setUseLed(true, LED_BUILTIN);
-  // ==== подключаем WiFi ============================
-  if (!wifi_config.startWiFi())
-  {
-    ESP.restart();
-  }
   // ==== запускаем HTTP-сервер ======================
   server_init();
-  switch_control.findRelays();
 }
 
 void loop()

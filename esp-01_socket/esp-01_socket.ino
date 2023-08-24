@@ -13,24 +13,25 @@ void setup()
   pinMode(btn_pin, INPUT_PULLUP);
 
   wifi_config.begin(&HTTP, &FILESYSTEM);
+  // ==== инициализируем файловую систему ============
+  if (FILESYSTEM.begin())
+  {
+    // ==== восстанавливаем настройки ================
+    wifi_config.loadConfig();
+    relay_control.attachWebInterface(&HTTP, &FILESYSTEM);
+  }
+  // ==== запускаем UDP ==============================
   Serial.println(F("Starting UDP"));
   if (udp.begin(local_port))
   {
+    wifi_config.setUseLed(true, LED_BUILTIN);
     relay_control.begin(&udp, local_port, relays_count, relays);
-    if (FILESYSTEM.begin())
-    {
-      // ==== восстанавливаем настройки ================
-      wifi_config.loadConfig();
-      relay_control.attachWebInterface(&HTTP, &FILESYSTEM);
-    }
   }
   else
   {
     Serial.println(F("failed, restart"));
     ESP.restart();
   }
-
-  wifi_config.setUseLed(true, LED_BUILTIN);
   // ==== подключаем WiFi ============================
   if (!wifi_config.startWiFi())
   {

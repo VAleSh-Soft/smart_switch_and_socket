@@ -19,8 +19,8 @@
 
 // ==== кнопка =======================================
 #if defined(ARDUINO_ARCH_ESP8266)
-shButton btn1(5);
-shButton btn2(4);
+shButton btn1(4);
+shButton btn2(5);
 shButton btn3(13);
 #elif defined(ARDUINO_ARCH_ESP32)
 shButton btn1(16);
