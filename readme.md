@@ -1,6 +1,6 @@
 Простые модули WiFi-реле и WiFi-выключателей. Имеются варианты: 
 - [двухрелейный модуль WiFi-реле](wifi_socket/readme.md);
-- [двухкнопочный модуль WiFi-выключателя](wifi_switch/readme.md);
+- [трехкнопочный модуль WiFi-выключателя](wifi_switch/readme.md);
 
 Количество реле/кнопок в модулях может быть изменено, см. описание к библиотеке  [shSRControl](https://github.com/VAleSh-Soft/shSRControl).
 

@@ -1,27 +1,38 @@
-#include <ESP8266WiFi.h>
+#if defined(ARDUINO_ARCH_ESP8266)
 #include <FS.h>
+#endif
 #include <shSRControl.h>
 #include <shWiFiConfig.h>
 #include "header_file.h"
+
+#if defined(ARDUINO_ARCH_ESP8266)
+#if FILESYSTEM == LittleFS
+#include <LittleFS.h>
+#endif
+#elif defined(ARDUINO_ARCH_ESP32)
+#if FILESYSTEM == FFat
+#include <FFat.h>
+#endif
+#if FILESYSTEM == SPIFFS
+#include <SPIFFS.h>
+#endif
+#endif
 
 void setup()
 {
   Serial.begin(115200);
   Serial.println();
 
-  // восстанавливаем режим пина кнопки (на всякий случай)
-  pinMode(btn_pin, INPUT_PULLUP);
-
   wifi_config.begin(&HTTP, &FILESYSTEM);
   Serial.println(F("Starting UDP"));
   if (udp.begin(local_port))
   {
-    relay_control.begin(&udp, local_port, relays_count, relays);
+    switch_control.begin(&udp, local_port, switch_count, relays);
     if (FILESYSTEM.begin())
     {
       // ==== восстанавливаем настройки ================
       wifi_config.loadConfig();
-      relay_control.attachWebInterface(&HTTP, &FILESYSTEM);
+      switch_control.attachWebInterface(&HTTP, &FILESYSTEM);
     }
   }
   else
@@ -38,12 +49,13 @@ void setup()
   }
   // ==== запускаем HTTP-сервер ======================
   server_init();
+  switch_control.findRelays();
 }
 
 void loop()
 {
   wifi_config.tick();
-  relay_control.tick();
+  switch_control.tick();
   HTTP.handleClient();
 
   delay(1);
