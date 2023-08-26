@@ -4,7 +4,6 @@
 #include <shSRControl.h>
 #include <shWiFiConfig.h>
 #include "header_file.h"
-
 #if defined(ARDUINO_ARCH_ESP8266)
 #if FILESYSTEM == LittleFS
 #include <LittleFS.h>
@@ -32,6 +31,7 @@ void setup()
     switch_control.attachWebInterface(&HTTP, &FILESYSTEM);
   }
   // ==== подключаем WiFi ============================
+  wifi_config.setUseLed(true, ledPin);
   if (!wifi_config.startWiFi())
   {
     ESP.restart();
@@ -40,8 +40,7 @@ void setup()
   Serial.println(F("Starting UDP"));
   if (udp.begin(local_port))
   {
-    switch_control.begin(&udp, local_port, switch_count, relays);
-    wifi_config.setUseLed(true, LED_BUILTIN);
+    switch_control.begin(&udp, local_port);
   }
   else
   {

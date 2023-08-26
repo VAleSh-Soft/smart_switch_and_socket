@@ -24,8 +24,7 @@ void setup()
   Serial.println(F("Starting UDP"));
   if (udp.begin(local_port))
   {
-    wifi_config.setUseLed(true, LED_BUILTIN);
-    relay_control.begin(&udp, local_port, relays_count, relays);
+    relay_control.begin(&udp, local_port);
   }
   else
   {
@@ -33,6 +32,7 @@ void setup()
     ESP.restart();
   }
   // ==== подключаем WiFi ============================
+  wifi_config.setUseLed(true, LED_BUILTIN);
   if (!wifi_config.startWiFi())
   {
     ESP.restart();

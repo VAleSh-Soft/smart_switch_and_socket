@@ -19,7 +19,6 @@ shButton btn(btn_pin);
 shWiFiConfig wifi_config;
 
 // ==== SRControl ====================================
-shRelayControl relay_control;
 WiFiUDP udp;
 // локальный порт для прослушивания udp-пакетов
 const uint16_t local_port = 54321;
@@ -37,6 +36,8 @@ shRelayData relays[relays_count] = {
         &btn,
         "" // описание реле, может изменяться в Web-интерфейсе
     }};
+
+shRelayControl relay_control(relays, relays_count);
 
 // ==== сервера ======================================
 ESP8266WebServer HTTP(80);

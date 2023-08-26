@@ -8,8 +8,6 @@
 #elif defined(ARDUINO_ARCH_ESP32)
 #include <HTTPUpdateServer.h>
 #include <WebServer.h>
-#include <SSDP.h>
-#include <mDNS.h>
 #endif
 #include <shSRControl.h>
 #include <shWiFiConfig.h>
@@ -17,29 +15,34 @@
 
 #define FILESYSTEM SPIFFS
 
-// ==== кнопка =======================================
+// ==== кнопки =======================================
 #if defined(ARDUINO_ARCH_ESP8266)
-shButton btn1(4);
-shButton btn2(5);
-shButton btn3(13);
+// пины кнопок на esp8266
+#define BTN1_PIN 4
+#define BTN2_PIN 5
+#define BTN3_PIN 13
 #elif defined(ARDUINO_ARCH_ESP32)
-shButton btn1(16);
-shButton btn2(17);
-shButton btn3(18);
+// пины кнопок на esp32
+#define BTN1_PIN 16
+#define BTN2_PIN 17
+#define BTN3_PIN 18
 #endif
+
+shButton btn1(BTN1_PIN);
+shButton btn2(BTN2_PIN);
+shButton btn3(BTN3_PIN);
 
 // ==== WiFiConfig ===================================
 shWiFiConfig wifi_config;
 
 // ==== SRControl ====================================
-shSwitchControl switch_control;
 WiFiUDP udp;
 // локальный порт для прослушивания udp-пакетов
 const uint16_t local_port = 54321;
 
 // работаем с трехкнопочным модулем
 const uint8_t switch_count = 3;
-shSwitchData relays[switch_count] = {
+shSwitchData switches[switch_count] = {
     (shSwitchData){
         "relay1",
         false,
@@ -59,6 +62,8 @@ shSwitchData relays[switch_count] = {
         &btn3,
         ""}};
 
+shSwitchControl switch_control(switches, switch_count);
+
 // ==== сервера ======================================
 // Web интерфейс для устройства
 #if defined(ARDUINO_ARCH_ESP8266)
@@ -73,20 +78,23 @@ HTTPUpdateServer httpUpdater;
 
 void server_init()
 {
-    // ==== MDNS =======================================
-    String host = wifi_config.getApSsid();
-    host.toLowerCase();
-    MDNS.begin(host.c_str());
-
     // ==== HTTP =======================================
+#if defined(ARDUINO_ARCH_ESP8266)
     // SSDP дескриптор
     HTTP.on("/description.xml", HTTP_GET, []()
             { SSDP.schema(HTTP.client()); });
+#endif
     HTTP.onNotFound([]()
                     { HTTP.send(404, "text/plan", F("404. File not found.")); });
     // настройка сервера обновлений
     httpUpdater.setup(&HTTP, "/firmware");
     HTTP.begin();
+
+#if defined(ARDUINO_ARCH_ESP8266)
+    // ==== MDNS =======================================
+    String host = wifi_config.getApSsid();
+    host.toLowerCase();
+    MDNS.begin(host.c_str());
 
     // ==== SSDP =======================================
     // Если версия  2.0.0 закомментируйте следующую строчку
@@ -102,4 +110,9 @@ void server_init()
     SSDP.setManufacturer("VAleSh-Soft");
     SSDP.setManufacturerURL("https://github.com/VAleSh-Soft");
     SSDP.begin();
+#endif
 }
+
+// ==== свеодиод =====================================
+
+const int8_t ledPin = 4;
