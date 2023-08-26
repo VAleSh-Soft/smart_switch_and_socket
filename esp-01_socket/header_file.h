@@ -26,8 +26,8 @@ const uint16_t local_port = 54321;
 const byte relay_pin = 0;
 
 // ==== работаем с однорелейным модулем ==============
-const uint8_t relays_count = 1;
-shRelayData relays[relays_count] = {
+const uint8_t relay_count = 1;
+shRelayData relays[relay_count] = {
     (shRelayData){
         "relay1", // сетевой идентификатор реле, может изменяться в Web-интерфейсе
         relay_pin,
@@ -37,7 +37,7 @@ shRelayData relays[relays_count] = {
         "" // описание реле, может изменяться в Web-интерфейсе
     }};
 
-shRelayControl relay_control(relays, relays_count);
+shRelayControl relay_control(relays, relay_count);
 
 // ==== сервера ======================================
 ESP8266WebServer HTTP(80);
