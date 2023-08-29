@@ -54,7 +54,7 @@ shRelayData relays[relay_count] = {
         &btn1,
         ""},
     (shRelayData){
-        "relay1",
+        "relay2",
         RELAY2_PIN,
         HIGH,
         false,

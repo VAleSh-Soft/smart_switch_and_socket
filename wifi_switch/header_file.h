@@ -115,4 +115,8 @@ void server_init()
 
 // ==== свеодиод =====================================
 
+#if defined(ARDUINO_ARCH_ESP8266)
+const int8_t ledPin = 2; // LED_BUILTIN;
+#else
 const int8_t ledPin = 4;
+#endif
