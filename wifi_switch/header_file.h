@@ -8,6 +8,7 @@
 #elif defined(ARDUINO_ARCH_ESP32)
 #include <HTTPUpdateServer.h>
 #include <WebServer.h>
+#include <ESPmDNS.h>
 #endif
 #include <shSRControl.h>
 #include <shWiFiConfig.h>
@@ -90,12 +91,12 @@ void server_init()
     httpUpdater.setup(&HTTP, "/firmware");
     HTTP.begin();
 
-#if defined(ARDUINO_ARCH_ESP8266)
     // ==== MDNS =======================================
     String host = wifi_config.getApSsid();
     host.toLowerCase();
     MDNS.begin(host.c_str());
 
+#if defined(ARDUINO_ARCH_ESP8266)
     // ==== SSDP =======================================
     // Если версия  2.0.0 закомментируйте следующую строчку
     SSDP.setDeviceType("upnp:rootdevice");
