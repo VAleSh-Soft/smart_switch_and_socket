@@ -19,19 +19,17 @@
 #define USE_LITTLEFS // выбрать USE_SPIFFS или USE_LITTLEFS, или USE_FFAT (только для esp32)
 
 #if defined(USE_SPIFFS)
+#include <SPIFFS.h>
 const char *fsName = "SPIFFS";
 FS *FILESYSTEM = &SPIFFS;
-SPIFFSConfig fileSystemConfig = SPIFFSConfig();
 #elif defined(USE_LITTLEFS)
 #include <LittleFS.h>
 const char *fsName = "LittleFS";
 FS *FILESYSTEM = &LittleFS;
-LittleFSConfig fileSystemConfig = LittleFSConfig();
 #elif defined(USE_FFAT) && defined(ARDUINO_ARCH_ESP32)
-#include <LittleFS.h>
-const char *fsName = "LittleFS";
-FS *FILESYSTEM = &LittleFS;
-LittleFSConfig fileSystemConfig = LittleFSConfig();
+#include <FFat.h>
+const char *fsName = "FFat";
+FS *FILESYSTEM = &FFat;
 #else
 #error First, specify the file system in the line '#define USE_xxxxx' from among the available
 #endif
@@ -100,38 +98,38 @@ HTTPUpdateServer httpUpdater;
 
 void server_init()
 {
-    // ==== HTTP =======================================
+// ==== HTTP =======================================
 #if defined(ARDUINO_ARCH_ESP8266)
-    // SSDP дескриптор
-    HTTP.on("/description.xml", HTTP_GET, []()
-            { SSDP.schema(HTTP.client()); });
+  // SSDP дескриптор
+  HTTP.on("/description.xml", HTTP_GET, []()
+          { SSDP.schema(HTTP.client()); });
 #endif
-    HTTP.onNotFound([]()
-                    { HTTP.send(404, "text/plan", F("404. File not found.")); });
-    // настройка сервера обновлений
-    httpUpdater.setup(&HTTP, "/firmware");
-    HTTP.begin();
+  HTTP.onNotFound([]()
+                  { HTTP.send(404, "text/plan", F("404. File not found.")); });
+  // настройка сервера обновлений
+  httpUpdater.setup(&HTTP, "/firmware");
+  HTTP.begin();
 
-    // ==== MDNS =======================================
-    String host = wifi_config.getApSsid();
-    host.toLowerCase();
-    MDNS.begin(host.c_str());
+  // ==== MDNS =======================================
+  String host = wifi_config.getApSsid();
+  host.toLowerCase();
+  MDNS.begin(host.c_str());
 
 #if defined(ARDUINO_ARCH_ESP8266)
-    // ==== SSDP =======================================
-    // Если версия  2.0.0 закомментируйте следующую строчку
-    SSDP.setDeviceType("upnp:rootdevice");
-    SSDP.setSchemaURL("description.xml");
-    SSDP.setHTTPPort(80);
-    SSDP.setName(host);
-    SSDP.setSerialNumber("000000001240");
-    SSDP.setURL("/");
-    SSDP.setModelName("WiFi_Relay");
-    SSDP.setModelNumber("000000000001");
-    SSDP.setModelURL("https://github.com/VAleSh-Soft");
-    SSDP.setManufacturer("VAleSh-Soft");
-    SSDP.setManufacturerURL("https://github.com/VAleSh-Soft");
-    SSDP.begin();
+  // ==== SSDP =======================================
+  // Если версия  2.0.0 закомментируйте следующую строчку
+  SSDP.setDeviceType("upnp:rootdevice");
+  SSDP.setSchemaURL("description.xml");
+  SSDP.setHTTPPort(80);
+  SSDP.setName(host);
+  SSDP.setSerialNumber("000000001240");
+  SSDP.setURL("/");
+  SSDP.setModelName("WiFi_Relay");
+  SSDP.setModelNumber("000000000001");
+  SSDP.setModelURL("https://github.com/VAleSh-Soft");
+  SSDP.setManufacturer("VAleSh-Soft");
+  SSDP.setManufacturerURL("https://github.com/VAleSh-Soft");
+  SSDP.begin();
 #endif
 }
 

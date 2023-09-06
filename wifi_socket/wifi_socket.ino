@@ -1,34 +1,20 @@
-#if defined(ARDUINO_ARCH_ESP8266)
-#include <FS.h>
-#endif
 #include <shSRControl.h>
 #include <shWiFiConfig.h>
 #include "header_file.h"
-#if defined(ARDUINO_ARCH_ESP8266)
-#if FILESYSTEM == LittleFS
-#include <LittleFS.h>
-#endif
-#elif defined(ARDUINO_ARCH_ESP32)
-#if FILESYSTEM == FFat
-#include <FFat.h>
-#endif
-#if FILESYSTEM == SPIFFS
-#include <SPIFFS.h>
-#endif
-#endif
+#include "shFS.h"
 
 void setup()
 {
   Serial.begin(115200);
   Serial.println();
 
-  wifi_config.begin(&HTTP, &FILESYSTEM);
+  wifi_config.begin(&HTTP, FILESYSTEM);
   // ==== инициализируем файловую систему ============
-  if (FILESYSTEM.begin())
+  if (fs_init(FILESYSTEM, fsName))
   {
     // ==== восстанавливаем настройки ================
     wifi_config.loadConfig();
-    relay_control.attachWebInterface(&HTTP, &FILESYSTEM);
+    relay_control.attachWebInterface(&HTTP, FILESYSTEM);
   }
   // ==== подключаем WiFi ============================
   wifi_config.setUseLed(true, ledPin);
@@ -37,9 +23,10 @@ void setup()
     ESP.restart();
   }
   // ==== запускаем UDP ==============================
-  Serial.println(F("Starting UDP"));
+  Serial.print(F("Starting UDP..."));
   if (udp.begin(local_port))
   {
+    Serial.println(F("OK"));
     relay_control.begin(&udp, local_port);
   }
   else
