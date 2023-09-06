@@ -1,4 +1,6 @@
-Простые модули WiFi-реле и WiFi-выключателей. Имеются варианты: 
+Простые модули WiFi-реле и WiFi-выключателя, построенные на библиотках [hSRControl](https://github.com/VAleSh-Soft/shSRControl) и [shWiFiConfig](https://github.com/VAleSh-Soft/shWiFiConfig). 
+
+Имеются варианты: 
 - [двухрелейный модуль WiFi-реле](wifi_socket/readme.md);
 - [трехкнопочный модуль WiFi-выключателя](wifi_switch/readme.md);
 
@@ -8,7 +10,7 @@
 
 Отдельно представлен [модуль](esp-01_socket/readme.md) WiFi-реле на основе **esp-01** с однорелейным модулем.
 
-Схемы подключения см. в файле readme.md соответствующего модуля
+Пины для подключения реле и кнопок см. в файле **header_file.h** соответствующего модуля
 
 <hr>
 

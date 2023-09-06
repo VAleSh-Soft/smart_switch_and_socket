@@ -6,93 +6,123 @@ static const char WRITE_LABEL[] PROGMEM = "Write label file...";
 static const char CHECKING_FS_LAB[] PROGMEM = "Checking file system label...";
 static const char FS_INIT[] PROGMEM = "File system initialization...";
 static const char FS_NAME[] PROGMEM = "File system - ";
+static const char NO_WRITE[] PROGMEM = " - failed to open file for writing";
+static const char NO_READ[] PROGMEM = " - failed to open file for reading";
+static const char RESTART[] PROGMEM = "The module will restart now";
 static const char FAILED_STR[] PROGMEM = "failed";
 static const char OK_STR[] PROGMEM = "OK";
 
-static String fsLabelFile = "fs";
-static String fsName;
+static String fsLabelFile = "/fs";
+String fsName;
 
-static void getLabel(FS *file_system, String &res)
+String readFile(const char *path)
 {
-  File file = file_system->open(fsLabelFile, "r");
-  if (file)
+  File file = FILESYSTEM.open(path, "r");
+  if (!file || file.isDirectory())
   {
-    size_t _size = file.size();
-    uint8_t _buf[_size + 1] = {0};
-    file.read(_buf, _size);
-    char *_res = (char *)_buf;
-    res = (String)_res;
+    Serial.print(path);
+    Serial.println(FPSTR(NO_READ));
+    return (emptyString);
   }
+
+  size_t _size = file.size();
+  uint8_t _buf[_size + 1] = {0};
+  file.read(_buf, _size);
+  char *_res = (char *)_buf;
+
   file.close();
+
+  return ((String)_res);
 }
 
-static bool fs_format(FS *file_system)
+static bool writeFile(const char *_path, String _text)
+{
+  bool result = false;
+
+#if defined(ARDUINO_ARCH_ESP8266)
+  File file = FILESYSTEM.open(_path, "w");
+#else
+  File file = FILESYSTEM.open(_path, "w", true);
+#endif
+  if (!file)
+  {
+    Serial.print(_path);
+    Serial.println(FPSTR(NO_WRITE));
+    return (result);
+  }
+
+  uint8_t *_buf = new uint8_t[_text.length()];
+  memcpy(_buf, _text.c_str(), _text.length());
+  size_t n = file.write(_buf, _text.length());
+  delete[] _buf;
+  result = (n == _text.length());
+  file.close();
+
+  return (result);
+}
+
+static bool fs_format()
 {
   Serial.print(FPSTR(FORMATTING_FS));
-  bool result = file_system->format();
-
+  bool result = FILESYSTEM.format();
+  (result) ? Serial.println(FPSTR(OK_STR)) : Serial.println(FPSTR(FAILED_STR));
+#if defined(ARDUINO_ARCH_ESP32)
   if (result)
   {
-    Serial.println(FPSTR(OK_STR));
+    Serial.println(FPSTR(RESTART));
+    Serial.println();
+    ESP.restart();
+  }
+#endif
+
+  return (result);
+}
+
+static bool fs_check()
+{
+  bool result = FILESYSTEM.exists(fsLabelFile.c_str());
+  if (!result)
+  {
     Serial.print(FPSTR(WRITE_LABEL));
-    File file = file_system->open(fsLabelFile, "w");
-    result = file;
-    if (result)
-    {
-      uint8_t *_buf = new uint8_t[fsName.length()];
-      memcpy(_buf, fsName.c_str(), fsName.length());
-      file.write(_buf, fsName.length());
-      delete[] _buf;
-    }
-    file.close();
-    String lab;
-    getLabel(file_system, lab);
-    result = (lab == fsName);
+    result = writeFile(fsLabelFile.c_str(), fsName);
     (result) ? Serial.println(FPSTR(OK_STR)) : Serial.println(FPSTR(FAILED_STR));
   }
   else
   {
-    Serial.println(FPSTR(FAILED_STR));
-  }
-
-  return (result);
-}
-
-static bool fs_check(FS *file_system)
-{
-  Serial.print(FPSTR(CHECKING_FS_LAB));
-  bool result = file_system->exists(fsLabelFile);
-
-  if (result)
-  {
-    String x;
-    getLabel(file_system, x);
+    Serial.print(FPSTR(CHECKING_FS_LAB));
+    String x = readFile(fsLabelFile.c_str());
     result = (x == fsName);
+    (result) ? Serial.println(FPSTR(OK_STR)) : Serial.println(FPSTR(FAILED_STR));
   }
-  (result) ? Serial.println(FPSTR(OK_STR)) : Serial.println(FPSTR(FAILED_STR));
 
   return (result);
 }
 
-bool fs_init(FS *file_system, const char *fs_name)
+bool fs_init()
 {
-  fsName = (String)fs_name;
+#if defined(USE_SPIFFS)
+  fsName = "SPIFFS";
+#elif defined(USE_LITTLEFS)
+  fsName = "LittleFS";
+#elif defined(USE_FFAT) && defined(ARDUINO_ARCH_ESP32)
+  fsName = "FFat";
+#endif
 
   Serial.print(FPSTR(FS_INIT));
-
-  bool result = file_system->begin();
+  bool result = FILESYSTEM.begin();
   (result) ? Serial.println(FPSTR(OK_STR)) : Serial.println(FPSTR(FAILED_STR));
 
   if (result)
   {
     Serial.print(FPSTR(FS_NAME));
     Serial.println(fsName);
-    result = fs_check(file_system);
+
+    result = fs_check();
   }
 
   if (!result)
   {
-    fs_format(file_system);
+    result = fs_format();
   }
 
   return (result);

@@ -16,23 +16,8 @@
 #include <FS.h>
 
 // ==== файловая система =============================
-#define USE_LITTLEFS // выбрать USE_SPIFFS или USE_LITTLEFS, или USE_FFAT (только для esp32)
 
-#if defined(USE_SPIFFS)
-#include <SPIFFS.h>
-const char *fsName = "SPIFFS";
-FS *FILESYSTEM = &SPIFFS;
-#elif defined(USE_LITTLEFS)
-#include <LittleFS.h>
-const char *fsName = "LittleFS";
-FS *FILESYSTEM = &LittleFS;
-#elif defined(USE_FFAT) && defined(ARDUINO_ARCH_ESP32)
-#include <FFat.h>
-const char *fsName = "FFat";
-FS *FILESYSTEM = &FFat;
-#else
-#error First, specify the file system in the line '#define USE_xxxxx' from among the available
-#endif
+// настройки файловой системы см. в файле shFS.h
 
 // ==== кнопки =======================================
 #if defined(ARDUINO_ARCH_ESP8266)

@@ -8,13 +8,13 @@ void setup()
   Serial.begin(115200);
   Serial.println();
 
-  wifi_config.begin(&HTTP, FILESYSTEM);
+  wifi_config.begin(&HTTP, &FILESYSTEM);
   // ==== инициализируем файловую систему ============
-  if (fs_init(FILESYSTEM, fsName))
+  if (fs_init())
   {
     // ==== восстанавливаем настройки ================
     wifi_config.loadConfig();
-    switch_control.attachWebInterface(&HTTP, FILESYSTEM);
+    switch_control.attachWebInterface(&HTTP, &FILESYSTEM);
   }
   // ==== подключаем WiFi ============================
   wifi_config.setUseLed(true, ledPin);
