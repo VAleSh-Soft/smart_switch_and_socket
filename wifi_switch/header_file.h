@@ -13,8 +13,28 @@
 #include <shSRControl.h>
 #include <shWiFiConfig.h>
 #include <shButton.h>
+#include <FS.h>
 
-#define FILESYSTEM SPIFFS
+// ==== файловая система =============================
+#define USE_LITTLEFS // выбрать USE_SPIFFS или USE_LITTLEFS, или USE_FFAT (только для esp32)
+
+#if defined(USE_SPIFFS)
+const char *fsName = "SPIFFS";
+FS *FILESYSTEM = &SPIFFS;
+SPIFFSConfig fileSystemConfig = SPIFFSConfig();
+#elif defined(USE_LITTLEFS)
+#include <LittleFS.h>
+const char *fsName = "LittleFS";
+FS *FILESYSTEM = &LittleFS;
+LittleFSConfig fileSystemConfig = LittleFSConfig();
+#elif defined(USE_FFAT) && defined(ARDUINO_ARCH_ESP32)
+#include <LittleFS.h>
+const char *fsName = "LittleFS";
+FS *FILESYSTEM = &LittleFS;
+LittleFSConfig fileSystemConfig = LittleFSConfig();
+#else
+#error First, specify the file system in the line '#define USE_xxxxx' from among the available
+#endif
 
 // ==== кнопки =======================================
 #if defined(ARDUINO_ARCH_ESP8266)
@@ -45,19 +65,19 @@ const uint16_t local_port = 54321;
 const uint8_t switch_count = 3;
 shSwitchData switches[switch_count] = {
     (shSwitchData){
-        "relay1",
+        "lamp01",
         false,
         IPAddress(192, 168, 4, 1),
         &btn1,
         ""},
     (shSwitchData){
-        "relay2",
+        "socket1",
         false,
         IPAddress(192, 168, 4, 1),
         &btn2,
         ""},
     (shSwitchData){
-        "relay3",
+        "socket2",
         false,
         IPAddress(192, 168, 4, 1),
         &btn3,
@@ -66,12 +86,13 @@ shSwitchData switches[switch_count] = {
 shSwitchControl switch_control(switches, switch_count);
 
 // ==== сервера ======================================
-// Web интерфейс для устройства
 #if defined(ARDUINO_ARCH_ESP8266)
+// Web интерфейс для устройства
 ESP8266WebServer HTTP(80);
 // сервер обновления по воздуху через web-интерфейс
 ESP8266HTTPUpdateServer httpUpdater;
 #elif defined(ARDUINO_ARCH_ESP32)
+// Web интерфейс для устройства
 WebServer HTTP(80);
 // сервер обновления по воздуху через web-интерфейс
 HTTPUpdateServer httpUpdater;

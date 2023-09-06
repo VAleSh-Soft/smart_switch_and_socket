@@ -29,7 +29,7 @@ const byte relay_pin = 0;
 const uint8_t relay_count = 1;
 shRelayData relays[relay_count] = {
     (shRelayData){
-        "relay1", // сетевой идентификатор реле, может изменяться в Web-интерфейсе
+        "lamp01", // сетевой идентификатор реле, может изменяться в Web-интерфейсе
         relay_pin,
         LOW,
         false,
