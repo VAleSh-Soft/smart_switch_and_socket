@@ -36,12 +36,22 @@ void setup()
   }
   // ==== запускаем HTTP-сервер ======================
   server_init();
+  // ==== настраиваем первую кнопку ==================
+  btn1.setLongClickMode(LCM_ONLYONCE);
+  btn1.setTimeoutOfLongClick(2000);
 }
 
 void loop()
 {
   wifi_config.tick();
   switch_control.tick();
+
+  // при удержании первой кнопки более двух секунд выключаем все реле сразу
+  if (btn1.getLastState() == BTN_LONGCLICK)
+  {
+    switch_control.setStateForAll(false);
+  }
+
   HTTP.handleClient();
 
   delay(1);
