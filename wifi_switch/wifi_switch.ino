@@ -27,6 +27,7 @@ void setup()
   if (udp.begin(local_port))
   {
     Serial.println(F("OK"));
+    switch_control.setCheckTimer(300000);
     switch_control.begin(&udp, local_port);
   }
   else
