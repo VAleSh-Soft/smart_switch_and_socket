@@ -71,9 +71,10 @@ httpUpdater.setup(&HTTP, "/firmware");
 
 - [hSRControl](https://github.com/VAleSh-Soft/shSRControl) - работа с релейными модулями;
 - [shWiFiConfig](https://github.com/VAleSh-Soft/shWiFiConfig) - настройка параметров WiFi-соединения;
-- [shButton](https://github.com/VAleSh-Soft/shButton) - работа с тактовыми кнопками;
 - [ArduinoJson](https://github.com/bblanchon/ArduinoJson) (не ниже версии 6.0) - работа с текстом в формате JSON;
 
 <hr>
 
 Если возникнут вопросы, пишите на valesh-soft@yandex.ru 
+
+Generic ESP8266 Module; 1MB(FS:128kB OTA:~438kB);

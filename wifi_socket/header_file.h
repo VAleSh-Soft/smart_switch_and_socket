@@ -12,7 +12,6 @@
 #endif
 #include <shSRControl.h>
 #include <shWiFiConfig.h>
-#include <shButton.h>
 #include <FS.h>
 
 // ==== файловая система =============================
@@ -36,8 +35,8 @@
 #define RELAY2_PIN 19
 #endif
 
-shButton btn1(BTN1_PIN);
-shButton btn2(BTN2_PIN);
+srButton btn1(BTN1_PIN);
+srButton btn2(BTN2_PIN);
 
 // ==== WiFiConfig ===================================
 shWiFiConfig wifi_config;

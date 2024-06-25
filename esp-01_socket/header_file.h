@@ -6,7 +6,6 @@
 #include <ESP8266mDNS.h>
 #include <shSRControl.h>
 #include <shWiFiConfig.h>
-#include <shButton.h>
 
 // ==== файловая система =============================
 
@@ -16,7 +15,7 @@
 // ==== кнопка =======================================
 // т.к. в esp-01 мало пинов, для кнопки используется пин Rx, поэтому в setup() нужно не забыть заново установить ему режим INPUT_PULLUP
 const uint8_t btn_pin = 3;
-shButton btn(btn_pin);
+srButton btn(btn_pin);
 
 // ==== WiFiConfig ===================================
 shWiFiConfig wifi_config;
