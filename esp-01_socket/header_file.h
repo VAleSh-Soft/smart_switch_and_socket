@@ -39,7 +39,7 @@ shRelayData relays[relay_count] = {
         "" // описание реле, может изменяться в Web-интерфейсе
     }};
 
-shRelayControl relay_control(relays, relay_count);
+shRelayControl relay_control;
 
 // ==== сервера ======================================
 ESP8266WebServer HTTP(80);

@@ -11,8 +11,8 @@
 #include <FS.h>
 
 // #define USE_SPIFFS
-#define USE_LITTLEFS
-// #define USE_FFAT // доступна только для esp32
+// #define USE_LITTLEFS
+#define USE_FFAT // доступна только для esp32
 
 #if defined(USE_SPIFFS)
 #if defined(ARDUINO_ARCH_ESP32)

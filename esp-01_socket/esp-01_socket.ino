@@ -9,6 +9,8 @@ void setup()
   Serial.begin(115200);
   Serial.println();
 
+  relay_control.init(relays, relay_count);
+
   // восстанавливаем режим пина кнопки (на всякий случай)
   pinMode(btn_pin, INPUT_PULLUP);
 
@@ -24,7 +26,7 @@ void setup()
   Serial.println(F("Starting UDP"));
   if (udp.begin(local_port))
   {
-    relay_control.begin(&udp, local_port);
+    relay_control.startDevice(&udp, local_port);
   }
   else
   {

@@ -64,7 +64,7 @@ shRelayData relays[relay_count] = {
         &btn2,
         ""}};
 
-shRelayControl relay_control(relays, relay_count);
+shRelayControl relay_control;
 
 // ==== сервера ======================================
 // Web интерфейс для устройства
@@ -115,10 +115,10 @@ void server_init()
 #endif
 }
 
-// ==== свеодиод =====================================
+// ==== светодиод ====================================
 
 #if defined(ARDUINO_ARCH_ESP8266)
 const int8_t ledPin = 2; // LED_BUILTIN;
 #else
-const int8_t ledPin = 4;
+const int8_t ledPin = 2;
 #endif

@@ -17,7 +17,11 @@ String fsName;
 
 String readFile(const char *path)
 {
+#if defined(ARDUINO_ARCH_ESP8266)
   File file = FILESYSTEM.open(path, "r");
+#else
+  File file = FILESYSTEM.open(path, "r", false);
+#endif
   if (!file || file.isDirectory())
   {
     Serial.print(path);
@@ -51,11 +55,15 @@ static bool writeFile(const char *_path, String _text)
     return (result);
   }
 
+#if defined(ARDUINO_ARCH_ESP8266)
   uint8_t *_buf = new uint8_t[_text.length()];
   memcpy(_buf, _text.c_str(), _text.length());
   size_t n = file.write(_buf, _text.length());
   delete[] _buf;
   result = (n == _text.length());
+#else
+  result = file.print(_text.c_str());
+#endif
   file.close();
 
   return (result);

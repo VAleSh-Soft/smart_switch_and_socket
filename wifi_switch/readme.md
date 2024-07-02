@@ -46,6 +46,7 @@ GND и GND1 между собой соединяться не должны.
 // настройка сервера обновлений
 httpUpdater.setup(&HTTP, "/firmware");
 ```
+Дополнительно в этом методе можно задать логин и пароль для доступа к интерфейсу обновления.
 
 В интерфейсе обновления нужно выбрать файл с новой прошивкой, нажать на кнопку **Update firmware** и дождаться результата.
 
@@ -57,7 +58,7 @@ httpUpdater.setup(&HTTP, "/firmware");
 
 - [hSRControl](https://github.com/VAleSh-Soft/shSRControl) - работа с релейными модулями;
 - [shWiFiConfig](https://github.com/VAleSh-Soft/shWiFiConfig) - настройка параметров WiFi-соединения;
-- [ArduinoJson](https://github.com/bblanchon/ArduinoJson) (не ниже версии 6.0) - работа с текстом в формате JSON;
+- [ArduinoJson](https://github.com/bblanchon/ArduinoJson) (код писался с использованием версии 6.21.3) - работа с текстом в формате JSON;
 
 <hr>
 

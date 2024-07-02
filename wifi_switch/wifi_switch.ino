@@ -8,6 +8,8 @@ void setup()
   Serial.begin(115200);
   Serial.println();
 
+  switch_control.init(switches, switch_count);
+
   wifi_config.begin(&HTTP, &FILESYSTEM);
   // ==== инициализируем файловую систему ============
   if (fs_init())
@@ -28,7 +30,7 @@ void setup()
   {
     Serial.println(F("OK"));
     switch_control.setCheckTimer(300000);
-    switch_control.begin(&udp, local_port);
+    switch_control.startDevice(&udp, local_port);
   }
   else
   {

@@ -65,7 +65,7 @@ shSwitchData switches[switch_count] = {
         &btn3,
         ""}};
 
-shSwitchControl switch_control(switches, switch_count);
+shSwitchControl switch_control;
 
 // ==== сервера ======================================
 #if defined(ARDUINO_ARCH_ESP8266)
@@ -122,5 +122,5 @@ void server_init()
 #if defined(ARDUINO_ARCH_ESP8266)
 const int8_t ledPin = 2; // LED_BUILTIN;
 #else
-const int8_t ledPin = 4;
+const int8_t ledPin = 15;
 #endif

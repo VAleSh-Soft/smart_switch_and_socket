@@ -8,6 +8,8 @@ void setup()
   Serial.begin(115200);
   Serial.println();
 
+  relay_control.init(relays, relay_count);
+
   wifi_config.begin(&HTTP, &FILESYSTEM);
   // ==== инициализируем файловую систему ============
   if (fs_init())
@@ -27,7 +29,7 @@ void setup()
   if (udp.begin(local_port))
   {
     Serial.println(F("OK"));
-    relay_control.begin(&udp, local_port);
+    relay_control.startDevice(&udp, local_port);
   }
   else
   {
