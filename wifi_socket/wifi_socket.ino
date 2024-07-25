@@ -1,7 +1,7 @@
 #include <shSRControl.h>
 #include <shWiFiConfig.h>
 #include "header_file.h"
-#include "shFS.h"
+#include "../src/shFS.h"
 
 void setup()
 {
