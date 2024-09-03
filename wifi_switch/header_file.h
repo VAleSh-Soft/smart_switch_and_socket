@@ -18,7 +18,7 @@
 
 /*
  * раскомментируйте строку '#define USE_SPIFFS'только если хотите использовать
- * файловую систему SPIFFS; в противном случае файловая система будет выбрана 
+ * файловую систему SPIFFS; в противном случае файловая система будет выбрана
  * автоматически в зависимости от используемого МК: для esp8266 будет
  * использована LittleFS, для esp32 будет использована FFat
  */
@@ -53,24 +53,9 @@ const uint16_t local_port = 54321;
 // работаем с трехкнопочным модулем
 const uint8_t switch_count = 3;
 shSwitchData switches[switch_count] = {
-    (shSwitchData){
-        "lamp01",
-        false,
-        IPAddress(192, 168, 4, 1),
-        &btn1,
-        ""},
-    (shSwitchData){
-        "socket1",
-        false,
-        IPAddress(192, 168, 4, 1),
-        &btn2,
-        ""},
-    (shSwitchData){
-        "socket2",
-        false,
-        IPAddress(192, 168, 4, 1),
-        &btn3,
-        ""}};
+    shSwitchData("lamp01", &btn1),
+    shSwitchData("socket1", &btn2),
+    shSwitchData("socket2", &btn3)};
 
 shSwitchControl switch_control;
 

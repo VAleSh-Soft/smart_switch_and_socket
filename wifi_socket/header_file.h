@@ -56,20 +56,8 @@ const uint16_t local_port = 54321;
 // работаем с двухрелейным модулем
 const uint8_t relay_count = 2;
 shRelayData relays[relay_count] = {
-    (shRelayData){
-        "socket1",
-        RELAY1_PIN,
-        HIGH,
-        false,
-        &btn1,
-        ""},
-    (shRelayData){
-        "socket2",
-        RELAY2_PIN,
-        HIGH,
-        false,
-        &btn2,
-        ""}};
+  shRelayData("socket1", RELAY1_PIN, HIGH, &btn1),
+  shRelayData("socket2", RELAY2_PIN, HIGH, &btn2)};
 
 shRelayControl relay_control;
 
