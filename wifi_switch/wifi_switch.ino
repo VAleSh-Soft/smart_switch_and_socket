@@ -8,7 +8,11 @@ void setup()
   Serial.begin(115200);
   Serial.println();
 
-  switch_control.init(switches, switch_count);
+  // работаем с трехканальным модулем
+  switch_control.init(3);
+  switch_control.addRelay("lamp01", &btn1);
+  switch_control.addRelay("socket1", &btn2);
+  switch_control.addRelay("socket2", &btn3);
 
   wifi_config.begin(&HTTP, &FILESYSTEM);
   // ==== инициализируем файловую систему ============

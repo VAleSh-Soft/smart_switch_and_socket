@@ -50,13 +50,6 @@ WiFiUDP udp;
 // локальный порт для прослушивания udp-пакетов
 const uint16_t local_port = 54321;
 
-// работаем с трехкнопочным модулем
-const uint8_t switch_count = 3;
-shSwitchData switches[switch_count] = {
-    shSwitchData("lamp01", &btn1),
-    shSwitchData("socket1", &btn2),
-    shSwitchData("socket2", &btn3)};
-
 shSwitchControl switch_control;
 
 // ==== сервера ======================================

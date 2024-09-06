@@ -8,7 +8,10 @@ void setup()
   Serial.begin(115200);
   Serial.println();
 
-  relay_control.init(relays, relay_count);
+  // работаем с двухрелейным модулем
+  relay_control.init(2);
+  relay_control.addRelay("socket1", RELAY1_PIN, HIGH, &btn1);
+  relay_control.addRelay("socket2", RELAY2_PIN, HIGH, &btn2);
 
   wifi_config.begin(&HTTP, &FILESYSTEM);
   // ==== инициализируем файловую систему ============

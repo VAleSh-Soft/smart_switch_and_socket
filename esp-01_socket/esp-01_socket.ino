@@ -9,7 +9,9 @@ void setup()
   Serial.begin(115200);
   Serial.println();
 
-  relay_control.init(relays, relay_count);
+  // работаем с однорелейным модулем
+  relay_control.init(1);
+  relay_control.addRelay("lamp01", relay_pin, LOW, &btn);
 
   // восстанавливаем режим пина кнопки (на всякий случай)
   pinMode(btn_pin, INPUT_PULLUP);

@@ -27,11 +27,6 @@ const uint16_t local_port = 54321;
 // Пин подключения сигнального контакта реле - GPIO0
 const byte relay_pin = 0;
 
-// ==== работаем с однорелейным модулем ==============
-const uint8_t relay_count = 1;
-shRelayData relays[relay_count] = {
-    shRelayData("lamp01", relay_pin, LOW, &btn)};
-
 shRelayControl relay_control;
 
 // ==== сервера ======================================
