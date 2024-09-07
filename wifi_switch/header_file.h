@@ -28,19 +28,22 @@
 // ==== кнопки =======================================
 #if defined(ARDUINO_ARCH_ESP8266)
 // пины кнопок на esp8266
-#define BTN1_PIN 4
-#define BTN2_PIN 5
-#define BTN3_PIN 13
+#define BTN1_PIN 4  // D2
+#define BTN2_PIN 5  // D1
+#define BTN3_PIN 13 // D7
+#define BTN4_PIN 14 // D5
 #elif defined(ARDUINO_ARCH_ESP32)
 // пины кнопок на esp32
 #define BTN1_PIN 16
 #define BTN2_PIN 17
 #define BTN3_PIN 18
+#define BTN4_PIN 19
 #endif
 
 srButton btn1(BTN1_PIN);
 srButton btn2(BTN2_PIN);
 srButton btn3(BTN3_PIN);
+srButton btn4(BTN4_PIN);
 
 // ==== WiFiConfig ===================================
 shWiFiConfig wifi_config;

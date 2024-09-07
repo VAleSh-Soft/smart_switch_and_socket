@@ -47,7 +47,4 @@ void loop()
 {
   wifi_config.tick();
   relay_control.tick();
-  HTTP.handleClient();
-
-  delay(1);
 }

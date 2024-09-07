@@ -8,11 +8,12 @@ void setup()
   Serial.begin(115200);
   Serial.println();
 
-  // работаем с трехканальным модулем
-  switch_control.init(3);
+  // работаем с четырехканальным модулем
+  switch_control.init(4);
   switch_control.addRelay("lamp01", &btn1);
   switch_control.addRelay("socket1", &btn2);
   switch_control.addRelay("socket2", &btn3);
+  switch_control.addRelay("socket_tv", &btn4);
 
   wifi_config.begin(&HTTP, &FILESYSTEM);
   // ==== инициализируем файловую систему ============
@@ -58,8 +59,4 @@ void loop()
   {
     switch_control.setStateForAll(false);
   }
-
-  HTTP.handleClient();
-
-  delay(1);
 }
