@@ -36,33 +36,33 @@ ESP8266HTTPUpdateServer httpUpdater;
 
 void server_init()
 {
-    // ==== MDNS =======================================
-    String host = wifi_config.getApSsid();
-    host.toLowerCase();
-    MDNS.begin(host.c_str());
+  // ==== MDNS =======================================
+  String host = wifi_config.getApSsid();
+  host.toLowerCase();
+  MDNS.begin(host.c_str());
 
-    // ==== HTTP =======================================
-    // SSDP дескриптор
-    HTTP.on("/description.xml", HTTP_GET, []()
-            { SSDP.schema(HTTP.client()); });
-    HTTP.onNotFound([]()
-                    { HTTP.send(404, "text/plan", F("404. File not found.")); });
-    // настройка сервера обновлений
-    httpUpdater.setup(&HTTP, "/firmware");
-    HTTP.begin();
+  // ==== HTTP =======================================
+  // SSDP дескриптор
+  HTTP.on("/description.xml", HTTP_GET, []()
+          { SSDP.schema(HTTP.client()); });
+  HTTP.onNotFound([]()
+                  { HTTP.send(404, "text/plan", F("404. File not found.")); });
+  // настройка сервера обновлений
+  httpUpdater.setup(&HTTP, "/firmware");
+  HTTP.begin();
 
-    // ==== SSDP =======================================
-    // Если версия  2.0.0 закомментируйте следующую строчку
-    SSDP.setDeviceType("upnp:rootdevice");
-    SSDP.setSchemaURL("description.xml");
-    SSDP.setHTTPPort(80);
-    SSDP.setName(host);
-    SSDP.setSerialNumber("000000001240");
-    SSDP.setURL("/");
-    SSDP.setModelName("WiFi_Relay");
-    SSDP.setModelNumber("000000000001");
-    SSDP.setModelURL("https://github.com/VAleSh-Soft");
-    SSDP.setManufacturer("VAleSh-Soft");
-    SSDP.setManufacturerURL("https://github.com/VAleSh-Soft");
-    SSDP.begin();
+  // ==== SSDP =======================================
+  // Если версия  2.0.0 закомментируйте следующую строчку
+  SSDP.setDeviceType("upnp:rootdevice");
+  SSDP.setSchemaURL("description.xml");
+  SSDP.setHTTPPort(80);
+  SSDP.setName(host);
+  SSDP.setSerialNumber("000000001240");
+  SSDP.setURL("/");
+  SSDP.setModelName("WiFi_Relay");
+  SSDP.setModelNumber("000000000001");
+  SSDP.setModelURL("https://github.com/VAleSh-Soft");
+  SSDP.setManufacturer("VAleSh-Soft");
+  SSDP.setManufacturerURL("https://github.com/VAleSh-Soft");
+  SSDP.begin();
 }
