@@ -54,8 +54,6 @@
 #elif defined(USE_FFAT) && defined(ARDUINO_ARCH_ESP32)
 #include <FFat.h>
 #define FILESYSTEM FFat
-#else
-#error First, specify the file system in the line '#define USE_xxxxx' from among the available
 #endif
 
 bool fs_init();
