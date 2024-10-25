@@ -74,7 +74,7 @@ httpUpdater.setup(&HTTP, "/firmware");
 
 ### Использованные сторонние библиотеки
 
-- [hSRControl](https://github.com/VAleSh-Soft/shSRControl) - работа с релейными модулями;
+- [shSRControl](https://github.com/VAleSh-Soft/shSRControl) - работа с релейными модулями;
 - [shWiFiConfig](https://github.com/VAleSh-Soft/shWiFiConfig) - настройка параметров WiFi-соединения;
 - [ArduinoJson](https://github.com/bblanchon/ArduinoJson) (код писался с использованием версии 6.21.3) - работа с текстом в формате JSON;
 
