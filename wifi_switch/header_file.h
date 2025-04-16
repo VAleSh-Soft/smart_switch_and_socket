@@ -28,16 +28,18 @@
 // ==== кнопки =======================================
 #if defined(ARDUINO_ARCH_ESP8266)
 // пины кнопок на esp8266
-#define BTN1_PIN 4  // D2
-#define BTN2_PIN 5  // D1
-#define BTN3_PIN 13 // D7
-#define BTN4_PIN 14 // D5
+#define BTN1_PIN 5   // D1
+#define BTN2_PIN 12  // D6
+#define BTN3_PIN 13  // D7
+#define BTN4_PIN 14  // D5
+#define BUZZER_PIN 4 // D2
 #elif defined(ARDUINO_ARCH_ESP32)
 // пины кнопок на esp32
 #define BTN1_PIN 16
 #define BTN2_PIN 17
 #define BTN3_PIN 18
 #define BTN4_PIN 19
+#define BUZZER_PIN 21
 #endif
 
 srButton btn1(BTN1_PIN);

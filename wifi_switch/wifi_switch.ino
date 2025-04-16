@@ -14,6 +14,8 @@ void setup()
   switch_control.addRelay("socket1", &btn2);
   switch_control.addRelay("socket2", &btn3);
   switch_control.addRelay("socket_tv", &btn4);
+  // включаем озвучку нажатия кнопок
+  switch_control.setErrorBuzzerState(true, BUZZER_PIN);
 
   wifi_config.begin(&HTTP, &FILESYSTEM);
   // ==== инициализируем файловую систему ============
