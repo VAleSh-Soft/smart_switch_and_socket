@@ -22,6 +22,7 @@ void setup()
   {
     // ==== восстанавливаем настройки ================
     wifi_config.loadConfig();
+    wifi_config.setCheckTimer(120000);
     relay_control.attachWebInterface(&HTTP, &FILESYSTEM);
   }
   // ==== запускаем UDP ==============================
