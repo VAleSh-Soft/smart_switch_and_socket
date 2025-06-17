@@ -16,14 +16,17 @@ void setup()
   // восстанавливаем режим пина кнопки (на всякий случай)
   pinMode(btn_pin, INPUT_PULLUP);
 
-  wifi_config.begin(&HTTP, &FILESYSTEM);
+  wifi_config.begin(&HTTP, &FILESYSTEM, wifi_config_page);
   // ==== инициализируем файловую систему ============
   if (FILESYSTEM.begin())
   {
     // ==== восстанавливаем настройки ================
     wifi_config.loadConfig();
     wifi_config.setCheckTimer(120000);
-    relay_control.attachWebInterface(&HTTP, &FILESYSTEM);
+    relay_control.attachWebInterface(&HTTP,
+                                     &FILESYSTEM,
+                                     relay_config_page,
+                                     wifi_config_page);
   }
   // ==== запускаем UDP ==============================
   Serial.println(F("Starting UDP"));

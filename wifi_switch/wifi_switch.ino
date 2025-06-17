@@ -17,13 +17,16 @@ void setup()
   // включаем озвучку нажатия кнопок
   switch_control.setErrorBuzzerState(true, BUZZER_PIN);
 
-  wifi_config.begin(&HTTP, &FILESYSTEM);
+  wifi_config.begin(&HTTP, &FILESYSTEM, wifi_config_page);
   // ==== инициализируем файловую систему ============
   if (fs_init())
   {
     // ==== восстанавливаем настройки ================
     wifi_config.loadConfig();
-    switch_control.attachWebInterface(&HTTP, &FILESYSTEM);
+    switch_control.attachWebInterface(&HTTP,
+                                      &FILESYSTEM,
+                                      relay_config_page,
+                                      wifi_config_page);
   }
   // ==== подключаем WiFi ============================
   wifi_config.setUseLed(true, ledPin);

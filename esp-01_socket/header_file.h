@@ -19,6 +19,7 @@ srButton btn(btn_pin);
 
 // ==== WiFiConfig ===================================
 shWiFiConfig wifi_config;
+String wifi_config_page = "/wifi_config";
 
 // ==== SRControl ====================================
 WiFiUDP udp;
@@ -28,6 +29,7 @@ const uint16_t local_port = 54321;
 const byte relay_pin = 0;
 
 shRelayControl relay_control;
+String relay_config_page = "/relay_config";
 
 // ==== сервера ======================================
 ESP8266WebServer HTTP(80);

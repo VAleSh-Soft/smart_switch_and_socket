@@ -13,13 +13,16 @@ void setup()
   relay_control.addRelay("socket1", RELAY1_PIN, HIGH, &btn1);
   relay_control.addRelay("socket2", RELAY2_PIN, HIGH, &btn2);
 
-  wifi_config.begin(&HTTP, &FILESYSTEM);
+  wifi_config.begin(&HTTP, &FILESYSTEM, wifi_config_page);
   // ==== инициализируем файловую систему ============
   if (fs_init())
   {
     // ==== восстанавливаем настройки ================
     wifi_config.loadConfig();
-    relay_control.attachWebInterface(&HTTP, &FILESYSTEM);
+    relay_control.attachWebInterface(&HTTP,
+                                     &FILESYSTEM,
+                                     relay_config_page,
+                                     wifi_config_page);
   }
   // ==== подключаем WiFi ============================
   wifi_config.setUseLed(true, ledPin);
