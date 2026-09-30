@@ -17,6 +17,9 @@ void setup()
   // включаем озвучку нажатия кнопок
   switch_control.setErrorBuzzerState(true, BUZZER_PIN);
 
+  switch_control.setCheckTimer(300000);
+  switch_control.setUdpPort(local_port);
+
   wifi_config.begin(&HTTP, &FILESYSTEM, wifi_config_page);
   // ==== инициализируем файловую систему ============
   if (fs_init())
@@ -36,11 +39,10 @@ void setup()
   }
   // ==== запускаем UDP ==============================
   Serial.print(F("Starting UDP..."));
-  if (udp.begin(local_port))
+  if (udp.begin(switch_control.getUdpPort()))
   {
     Serial.println(F("OK"));
-    switch_control.setCheckTimer(300000);
-    switch_control.startDevice(&udp, local_port);
+    switch_control.startDevice(&udp);
   }
   else
   {

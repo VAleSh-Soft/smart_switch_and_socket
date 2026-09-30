@@ -13,6 +13,10 @@ void setup()
   relay_control.init(1);
   relay_control.addRelay("lamp01", relay_pin, LOW, &btn);
 
+  relay_control.setUdpPort(local_port);
+  // relay_control.setLogOnState(false);
+  // wifi_config.setLogOnState(false);
+
   // восстанавливаем режим пина кнопки (на всякий случай)
   pinMode(btn_pin, INPUT_PULLUP);
 
@@ -30,9 +34,9 @@ void setup()
   }
   // ==== запускаем UDP ==============================
   Serial.println(F("Starting UDP"));
-  if (udp.begin(local_port))
+  if (udp.begin(relay_control.getUdpPort()))
   {
-    relay_control.startDevice(&udp, local_port);
+    relay_control.startDevice(&udp);
   }
   else
   {

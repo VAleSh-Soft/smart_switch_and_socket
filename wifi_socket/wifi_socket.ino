@@ -13,6 +13,8 @@ void setup()
   relay_control.addRelay("socket1", RELAY1_PIN, HIGH, &btn1);
   relay_control.addRelay("socket2", RELAY2_PIN, HIGH, &btn2);
 
+  relay_control.setUdpPort(local_port);
+
   wifi_config.begin(&HTTP, &FILESYSTEM, wifi_config_page);
   // ==== инициализируем файловую систему ============
   if (fs_init())
@@ -32,10 +34,10 @@ void setup()
   }
   // ==== запускаем UDP ==============================
   Serial.print(F("Starting UDP..."));
-  if (udp.begin(local_port))
+  if (udp.begin(relay_control.getUdpPort()))
   {
     Serial.println(F("OK"));
-    relay_control.startDevice(&udp, local_port);
+    relay_control.startDevice(&udp);
   }
   else
   {
