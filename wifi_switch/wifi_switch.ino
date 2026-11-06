@@ -29,6 +29,7 @@ void setup()
     switch_control.attachWebInterface(&HTTP,
                                       &FILESYSTEM,
                                       relay_config_page,
+                                      tasks_config_page,
                                       wifi_config_page);
   }
   // ==== подключаем WiFi ============================

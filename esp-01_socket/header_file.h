@@ -28,6 +28,7 @@ const byte relay_pin = 0;
 
 shRelayControl relay_control;
 String relay_config_page = "/relay_config";
+String tasks_config_page = "/tasks_config";
 
 // ==== сервера ======================================
 ESP8266WebServer HTTP(80);

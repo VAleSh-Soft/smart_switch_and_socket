@@ -58,6 +58,7 @@ const uint16_t local_port = 54321;
 
 shSwitchControl switch_control;
 String relay_config_page = "/relay_config";
+String tasks_config_page = "/tasks_config";
 
 // ==== сервера ======================================
 #if defined(ARDUINO_ARCH_ESP8266)
