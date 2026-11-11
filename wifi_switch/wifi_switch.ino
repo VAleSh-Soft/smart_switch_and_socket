@@ -10,10 +10,10 @@ void setup()
 
   // работаем с четырехканальным модулем
   switch_control.init(4);
-  switch_control.addRelay("lamp01", &btn1);
-  switch_control.addRelay("socket1", &btn2);
-  switch_control.addRelay("socket2", &btn3);
-  switch_control.addRelay("socket_tv", &btn4);
+  switch_control.addRelay("lamp01", BTN1_PIN);
+  switch_control.addRelay("socket1", BTN2_PIN);
+  switch_control.addRelay("socket2", BTN3_PIN);
+  switch_control.addRelay("socket_tv", BTN4_PIN);
   // включаем озвучку нажатия кнопок
   switch_control.setErrorBuzzerState(true, BUZZER_PIN);
 
@@ -28,7 +28,6 @@ void setup()
     wifi_config.loadConfig();
     switch_control.attachWebInterface(&HTTP,
                                       &FILESYSTEM,
-                                      relay_config_page,
                                       tasks_config_page,
                                       wifi_config_page);
   }
@@ -39,13 +38,7 @@ void setup()
     ESP.restart();
   }
   // ==== запускаем UDP ==============================
-  Serial.print(F("Starting UDP..."));
-  if (udp.begin(switch_control.getUdpPort()))
-  {
-    Serial.println(F("OK"));
-    switch_control.startDevice(&udp);
-  }
-  else
+  if (!switch_control.startUdpInteraction(&udp))
   {
     Serial.println(F("failed, restart"));
     ESP.restart();
@@ -53,8 +46,7 @@ void setup()
   // ==== запускаем HTTP-сервер ======================
   server_init();
   // ==== настраиваем первую кнопку ==================
-  btn1.setLongClickMode(LCM_ONLYONCE);
-  btn1.setTimeoutOfLongClick(2000);
+  switch_control.setButtonTimeoutOfLongClick(0, 2000);
 }
 
 void loop()
@@ -63,7 +55,7 @@ void loop()
   switch_control.tick();
 
   // при удержании первой кнопки более двух секунд выключаем все реле сразу
-  if (btn1.getLastState() == BTN_LONGCLICK)
+  if (switch_control.getButtonState(0) == BTN_LONGCLICK)
   {
     switch_control.setStateForAll(false);
   }

@@ -42,9 +42,6 @@
 #define RELAY2_PIN 19
 #endif
 
-srButton btn1(BTN1_PIN);
-srButton btn2(BTN2_PIN);
-
 // ==== WiFiConfig ===================================
 shWiFiConfig wifi_config;
 String wifi_config_page = "/wifi_config";
@@ -55,7 +52,6 @@ WiFiUDP udp;
 const uint16_t local_port = 54321;
 
 shRelayControl relay_control;
-String relay_config_page = "/relay_config";
 String tasks_config_page = "/tasks_config";
 
 // ==== сервера ======================================

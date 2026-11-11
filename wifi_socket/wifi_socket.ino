@@ -10,8 +10,8 @@ void setup()
 
   // работаем с двухрелейным модулем
   relay_control.init(2);
-  relay_control.addRelay("socket1", RELAY1_PIN, HIGH, &btn1);
-  relay_control.addRelay("socket2", RELAY2_PIN, HIGH, &btn2);
+  relay_control.addRelay("socket1", RELAY1_PIN, HIGH, BTN1_PIN);
+  relay_control.addRelay("socket2", RELAY2_PIN, HIGH, BTN2_PIN);
 
   relay_control.setUdpPort(local_port);
 
@@ -23,7 +23,6 @@ void setup()
     wifi_config.loadConfig();
     relay_control.attachWebInterface(&HTTP,
                                      &FILESYSTEM,
-                                     relay_config_page,
                                      tasks_config_page,
                                      wifi_config_page);
   }
@@ -34,13 +33,7 @@ void setup()
     ESP.restart();
   }
   // ==== запускаем UDP ==============================
-  Serial.print(F("Starting UDP..."));
-  if (udp.begin(relay_control.getUdpPort()))
-  {
-    Serial.println(F("OK"));
-    relay_control.startDevice(&udp);
-  }
-  else
+  if (!relay_control.startUdpInteraction(&udp))
   {
     Serial.println(F("failed, restart"));
     ESP.restart();

@@ -12,8 +12,7 @@
 
 // ==== кнопка =======================================
 // т.к. в esp-01 мало пинов, для кнопки используется пин Rx, поэтому в setup() нужно не забыть заново установить ему режим INPUT_PULLUP
-const uint8_t btn_pin = 3;
-srButton btn(btn_pin);
+constexpr uint8_t btn_pin = 3;
 
 // ==== WiFiConfig ===================================
 shWiFiConfig wifi_config;
@@ -27,7 +26,6 @@ const uint16_t local_port = 54321;
 const byte relay_pin = 0;
 
 shRelayControl relay_control;
-String relay_config_page = "/relay_config";
 String tasks_config_page = "/tasks_config";
 
 // ==== сервера ======================================

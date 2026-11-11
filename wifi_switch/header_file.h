@@ -42,11 +42,6 @@
 #define BUZZER_PIN 21
 #endif
 
-srButton btn1(BTN1_PIN);
-srButton btn2(BTN2_PIN);
-srButton btn3(BTN3_PIN);
-srButton btn4(BTN4_PIN);
-
 // ==== WiFiConfig ===================================
 shWiFiConfig wifi_config;
 String wifi_config_page = "/wifi_config";
@@ -57,7 +52,6 @@ WiFiUDP udp;
 const uint16_t local_port = 54321;
 
 shSwitchControl switch_control;
-String relay_config_page = "/relay_config";
 String tasks_config_page = "/tasks_config";
 
 // ==== сервера ======================================
