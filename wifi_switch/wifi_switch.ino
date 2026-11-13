@@ -20,19 +20,18 @@ void setup()
   switch_control.setCheckTimer(300000);
   switch_control.setUdpPort(local_port);
 
-  wifi_config.begin(&HTTP, &FILESYSTEM, wifi_config_page);
+  wifi_config.setUseLed(true, ledPin);
+  wifi_config.setApSsid(apSsid); // пароль оставляем стандартный - 12345678
   // ==== инициализируем файловую систему ============
   if (fs_init())
   {
-    // ==== восстанавливаем настройки ================
-    wifi_config.loadConfig();
+    wifi_config.begin(&HTTP, &FILESYSTEM, wifi_config_page);
     switch_control.attachWebInterface(&HTTP,
                                       &FILESYSTEM,
                                       tasks_config_page,
                                       wifi_config_page);
   }
   // ==== подключаем WiFi ============================
-  wifi_config.setUseLed(true, ledPin);
   if (!wifi_config.startWiFi())
   {
     ESP.restart();

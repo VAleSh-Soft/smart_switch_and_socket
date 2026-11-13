@@ -16,13 +16,13 @@ void setup()
   // восстанавливаем режим пина кнопки (на всякий случай, на esp8266 после старта режим этого пина может измениться)
   pinMode(btn_pin, INPUT_PULLUP);
 
-  wifi_config.begin(&HTTP, &FILESYSTEM, wifi_config_page);
+  wifi_config.setUseLed(true, LED_BUILTIN);
+  wifi_config.setApSsid(apSsid); // пароль оставляем по умолчанию - 12345678
   // ==== инициализируем файловую систему ============
   if (FILESYSTEM.begin())
   {
     // ==== восстанавливаем настройки ================
-    wifi_config.loadConfig();
-    wifi_config.setCheckTimer(120000);
+    wifi_config.begin(&HTTP, &FILESYSTEM, wifi_config_page);
     relay_control.attachWebInterface(&HTTP,
                                      &FILESYSTEM,
                                      tasks_config_page,
@@ -35,7 +35,6 @@ void setup()
     ESP.restart();
   }
   // ==== подключаем WiFi ============================
-  wifi_config.setUseLed(true, LED_BUILTIN);
   if (!wifi_config.startWiFi())
   {
     ESP.restart();

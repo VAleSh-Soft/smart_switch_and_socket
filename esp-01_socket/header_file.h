@@ -17,6 +17,7 @@ constexpr uint8_t btn_pin = 3;
 // ==== WiFiConfig ===================================
 shWiFiConfig wifi_config;
 String wifi_config_page = "/wifi_config";
+String apSsid = "WIFI_AP_LAMP";
 
 // ==== SRControl ====================================
 WiFiUDP udp;

@@ -45,6 +45,7 @@
 // ==== WiFiConfig ===================================
 shWiFiConfig wifi_config;
 String wifi_config_page = "/wifi_config";
+String apSsid = "WIFI_SWITCH_01";
 
 // ==== SRControl ====================================
 WiFiUDP udp;
