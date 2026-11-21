@@ -70,4 +70,4 @@ httpUpdater.setup(&HTTP, "/firmware");
 Если возникнут вопросы, пишите на valesh-soft@yandex.ru 
 
 
-Настройки модуля - Generic ESP8266 Module; 1MB(FS:64KB OTA:~470KB);
+Настройки модуля - Generic ESP8266 Module; CPU Frequeny: 160 MHz; 1MB(FS:64KB OTA:~470KB);

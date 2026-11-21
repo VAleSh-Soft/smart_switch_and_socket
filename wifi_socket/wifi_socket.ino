@@ -21,7 +21,6 @@ void setup()
   if (fs_init())
   {
     wifi_config.begin(&HTTP, &FILESYSTEM, wifi_config_page);
-    wifi_config.setApSsid(apSsid);
     relay_control.attachWebInterface(&HTTP,
                                      &FILESYSTEM,
                                      tasks_config_page,
