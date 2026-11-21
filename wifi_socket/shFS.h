@@ -4,9 +4,9 @@
  * Модуль для работы с файловой системой esp8266 и esp32; 
  *
  * Если вы хотите использовать файловую систему SPIFFS, то раскомментируйте
- * строку '#define USE_SPIFFS'; при этом для ESP32 опциях  платы нужно выбрать 
+ * строку '#define SH_USE_SPIFFS'; при этом для ESP32 опциях  платы нужно выбрать 
  * в "Partition cheme" схему "Default 4MB with spiffs";
- * В случае, если строка '#define USE_SPIFFS' останется закомментированной,
+ * В случае, если строка '#define SH_USE_SPIFFS' останется закомментированной,
  * тип файловой системы будет выбран в зависимости от вашего МК.
  *
  * Для ESP32 используется файловая система FFat; для работы с ней в опциях 
@@ -25,11 +25,11 @@
 #include <FS.h>
 #include <Arduino.h>
 
-// #define USE_SPIFFS
+// #define SH_USE_SPIFFS
 
 // ===================================================
 
-#if !defined(USE_SPIFFS)
+#if !defined(SH_USE_SPIFFS)
 #if defined(ARDUINO_ARCH_ESP32)
 
 #define USE_FFAT // доступна только для esp32
@@ -43,7 +43,7 @@
 
 // ===================================================
 
-#if defined(USE_SPIFFS)
+#if defined(SH_USE_SPIFFS)
 #if defined(ARDUINO_ARCH_ESP32)
 #include <SPIFFS.h>
 #endif
@@ -166,7 +166,7 @@ static bool fs_check()
 
 bool fs_init()
 {
-#if defined(USE_SPIFFS)
+#if defined(SH_USE_SPIFFS)
   fsName = "SPIFFS";
 #elif defined(USE_LITTLEFS)
   fsName = "LittleFS";
