@@ -13,6 +13,8 @@
 #include <shSRControl.h>
 #include <shWiFiConfig.h>
 
+#include <FS.h>
+
 // ==== файловая система =============================
 
 /*
@@ -24,7 +26,7 @@
 
 // #define SH_USE_SPIFFS
 
-#include <FS.h>
+#include "shFS.h"
 
 // ==== кнопки и реле ================================
 #if defined(ARDUINO_ARCH_ESP8266)
@@ -46,7 +48,7 @@
 // ==== WiFiConfig ===================================
 shWiFiConfig wifi_config;
 String wifi_config_page = "/wifi_config";
-String apSsid = "WIFI_AP_SOCKET_01";
+String apSsid = "WIFI_SOCKET_01";
 
 // ==== SRControl ====================================
 WiFiUDP udp;

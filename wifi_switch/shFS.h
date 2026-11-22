@@ -32,11 +32,11 @@
 #if !defined(SH_USE_SPIFFS)
 #if defined(ARDUINO_ARCH_ESP32)
 
-#define USE_FFAT // доступна только для esp32
+#define SH_USE_FFAT // доступна только для esp32
 
 #else
 
-#define USE_LITTLEFS
+#define SH_USE_LITTLEFS
 
 #endif
 #endif
@@ -48,10 +48,10 @@
 #include <SPIFFS.h>
 #endif
 #define FILESYSTEM SPIFFS
-#elif defined(USE_LITTLEFS)
+#elif defined(SH_USE_LITTLEFS)
 #include <LittleFS.h>
 #define FILESYSTEM LittleFS
-#elif defined(USE_FFAT) && defined(ARDUINO_ARCH_ESP32)
+#elif defined(SH_USE_FFAT) && defined(ARDUINO_ARCH_ESP32)
 #include <FFat.h>
 #define FILESYSTEM FFat
 #endif
@@ -66,19 +66,20 @@ static const char FS_NAME[] PROGMEM = "File system - ";
 static const char UNKN_FS[] PROGMEM = "Unsupported file system specified";
 static const char NO_WRITE[] PROGMEM = " - failed to open file for writing";
 static const char NO_READ[] PROGMEM = " - failed to open file for reading";
+static const char TOO_LARGE[] PROGMEM = " - too large (max 4096 bytes)";
 static const char RESTART[] PROGMEM = "The module will restart now";
 static const char FAILED_STR[] PROGMEM = "failed";
 static const char OK_STR[] PROGMEM = "OK";
 
-static String fsLabelFile = "/fs";
-String fsName;
+static const char *shFsLabelFile = "/fs";
+static String shFsName;
 
-String readFile(const char *path)
+String shReadFile(const char *path)
 {
-#if defined(ARDUINO_ARCH_ESP8266)
-  File file = FILESYSTEM.open(path, "r");
-#else
+#if defined(ARDUINO_ARCH_ESP32)
   File file = FILESYSTEM.open(path, "r", false);
+#else
+  File file = FILESYSTEM.open(path, "r");
 #endif
   if (!file || file.isDirectory())
   {
@@ -88,16 +89,21 @@ String readFile(const char *path)
   }
 
   size_t _size = file.size();
-  uint8_t _buf[_size + 1] = {0};
-  file.read(_buf, _size);
-  char *_res = (char *)_buf;
+  if (_size > 4096)
+  {
+    Serial.print(path);
+    Serial.println(FPSTR(TOO_LARGE));
+    file.close();
+    return (emptyString);
+  }
 
+  String content = file.readString();
   file.close();
 
-  return ((String)_res);
+  return (content);
 }
 
-static bool writeFile(const char *_path, String _text)
+static bool shWriteFile(const char *_path, const String &_text)
 {
   bool result = false;
 
@@ -113,15 +119,9 @@ static bool writeFile(const char *_path, String _text)
     return (result);
   }
 
-#if defined(ARDUINO_ARCH_ESP8266)
-  uint8_t *_buf = new uint8_t[_text.length()];
-  memcpy(_buf, _text.c_str(), _text.length());
-  size_t n = file.write(_buf, _text.length());
-  delete[] _buf;
-  result = (n == _text.length());
-#else
-  result = file.print(_text.c_str());
-#endif
+  result = (file.write((const uint8_t *)_text.c_str(),
+                       _text.length()) == _text.length());
+
   file.close();
 
   return (result);
@@ -130,6 +130,7 @@ static bool writeFile(const char *_path, String _text)
 static bool fs_format()
 {
   Serial.print(FPSTR(FORMATTING_FS));
+  FILESYSTEM.end();
   bool result = FILESYSTEM.format();
   (result) ? Serial.println(FPSTR(OK_STR)) : Serial.println(FPSTR(FAILED_STR));
 #if defined(ARDUINO_ARCH_ESP32)
@@ -146,18 +147,18 @@ static bool fs_format()
 
 static bool fs_check()
 {
-  bool result = FILESYSTEM.exists(fsLabelFile.c_str());
+  bool result = FILESYSTEM.exists(shFsLabelFile);
   if (!result)
   {
     Serial.print(FPSTR(WRITE_LABEL));
-    result = writeFile(fsLabelFile.c_str(), fsName);
+    result = shWriteFile(shFsLabelFile, shFsName);
     (result) ? Serial.println(FPSTR(OK_STR)) : Serial.println(FPSTR(FAILED_STR));
   }
   else
   {
     Serial.print(FPSTR(CHECKING_FS_LAB));
-    String x = readFile(fsLabelFile.c_str());
-    result = (x == fsName);
+    String x = shReadFile(shFsLabelFile);
+    result = (x == shFsName);
     (result) ? Serial.println(FPSTR(OK_STR)) : Serial.println(FPSTR(FAILED_STR));
   }
 
@@ -167,13 +168,13 @@ static bool fs_check()
 bool fs_init()
 {
 #if defined(SH_USE_SPIFFS)
-  fsName = "SPIFFS";
-#elif defined(USE_LITTLEFS)
-  fsName = "LittleFS";
-#elif defined(USE_FFAT) && defined(ARDUINO_ARCH_ESP32)
-  fsName = "FFat";
+  shFsName = "SPIFFS";
+#elif defined(SH_USE_LITTLEFS)
+  shFsName = "LittleFS";
+#elif defined(SH_USE_FFAT) && defined(ARDUINO_ARCH_ESP32)
+  shFsName = "FFat";
 #else
-  Serial.println(FPRST(UNKN_FS));
+  Serial.println(FPSTR(UNKN_FS));
   return (false);
 #endif
 
@@ -184,7 +185,7 @@ bool fs_init()
   if (result)
   {
     Serial.print(FPSTR(FS_NAME));
-    Serial.println(fsName);
+    Serial.println(shFsName);
 
     result = fs_check();
   }
@@ -192,6 +193,13 @@ bool fs_init()
   if (!result)
   {
     result = fs_format();
+#if !defined(ARDUINO_ARCH_ESP32)
+    if (result)
+    {
+      // примонтировать и записать метку
+      result = FILESYSTEM.begin() && fs_check();
+    }
+#endif
   }
 
   return (result);

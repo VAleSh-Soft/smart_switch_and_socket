@@ -12,6 +12,7 @@
 #endif
 #include <shSRControl.h>
 #include <shWiFiConfig.h>
+#include <FS.h>
 
 // ==== файловая система =============================
 
@@ -24,7 +25,7 @@
 
 // #define SH_USE_SPIFFS
 
-#include <FS.h>
+#include "shFS.h"
 
 // ==== кнопки =======================================
 #if defined(ARDUINO_ARCH_ESP8266)
