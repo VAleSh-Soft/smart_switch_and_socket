@@ -3,6 +3,7 @@
 Имеются варианты: 
 - [двухрелейный модуль WiFi-реле](wifi_socket/readme.md);
 - [четырехкнопочный модуль WiFi-выключателя](wifi_switch/readme.md);
+- [WiFi-модуль для управления светодиодной лентой](wifi_leds_light/readme.md)
 
 Количество реле/кнопок в модулях может быть изменено, см. описание к библиотеке  [shSRControl](https://github.com/VAleSh-Soft/shSRControl).
 

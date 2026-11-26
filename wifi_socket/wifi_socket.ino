@@ -1,7 +1,4 @@
-#include <shSRControl.h>
-#include <shWiFiConfig.h>
 #include "header_file.h"
-#include "shFS.h"
 
 void setup()
 {
@@ -18,11 +15,11 @@ void setup()
   wifi_config.setUseLed(true, ledPin);
   wifi_config.setApSsid(apSsid); // пароль оставляем по умолчанию - 12345678
   // ==== инициализируем файловую систему ============
-  if (fs_init())
+  if (esp_fs.init())
   {
-    wifi_config.begin(&HTTP, &FILESYSTEM, wifi_config_page);
+    wifi_config.begin(&HTTP, &ESP_FILESYSTEM, wifi_config_page);
     relay_control.attachWebInterface(&HTTP,
-                                     &FILESYSTEM,
+                                     &ESP_FILESYSTEM,
                                      tasks_config_page,
                                      wifi_config_page);
   }

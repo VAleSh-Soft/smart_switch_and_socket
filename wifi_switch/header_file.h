@@ -12,20 +12,7 @@
 #endif
 #include <shSRControl.h>
 #include <shWiFiConfig.h>
-#include <FS.h>
-
-// ==== файловая система =============================
-
-/*
- * раскомментируйте строку '#define SH_USE_SPIFFS'только если хотите использовать
- * файловую систему SPIFFS; в противном случае файловая система будет выбрана
- * автоматически в зависимости от используемого МК: для esp8266 будет
- * использована LittleFS, для esp32 будет использована FFat
- */
-
-// #define SH_USE_SPIFFS
-
-#include "shFS.h"
+#include <shESPFSinit.h>
 
 // ==== кнопки =======================================
 #if defined(ARDUINO_ARCH_ESP8266)
@@ -56,6 +43,10 @@ const uint16_t local_port = 54321;
 
 shSwitchControl switch_control;
 String tasks_config_page = "/tasks_config";
+
+// ==== прочее =======================================
+
+shESPFSinit esp_fs;
 
 // ==== сервера ======================================
 #if defined(ARDUINO_ARCH_ESP8266)
